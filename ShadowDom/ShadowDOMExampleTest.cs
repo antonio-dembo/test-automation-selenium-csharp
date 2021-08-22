@@ -26,31 +26,27 @@ namespace ShadowDom
         [TestMethod]
         public void TestGetText_FromShadowDOMElements()
         {
+            Console.WriteLine("Open Chrome downloads");
             _driver.Navigate().GoToUrl("chrome://downloads");
 
-            //Get shadow root element
-            IWebElement root1 = _driver.FindElement(By.TagName("downloads-manager"));
-            IWebElement shadowRoot1 = expandRootElement(root1);
-
-            IWebElement root2 = shadowRoot1.FindElement(By.TagName("downloads-toolbar"));
-            IWebElement shadowRoot2 = expandRootElement(root2);
-
-            IWebElement root3 = shadowRoot2.FindElement(By.TagName("cr-toolbar"));
-            IWebElement shadowRoot3 = expandRootElement(root3);
-
-            //this line breaks the test
-            var actualHeading = shadowRoot3.FindElements(By.XPath("//div[@id='leftContent']/div/"));
-            
-            string actualHeadingText = actualHeading[1].Text;
-
+            Console.WriteLine("Validate downloads page header text");
+            IWebElement shadowRoot = GetLastSelectorShadowroot("downloads-manager", "downloads-toolbar", "cr-toolbar");            
+            var actualHeading = shadowRoot.FindElement(By.XPath("//div[@id='leftContent']/div/"));  //this line breaks the test
+            string actualHeadingText = actualHeading.Text;
             Assert.Equals("Downloads", actualHeadingText);
-
-
         }
 
-        private IWebElement expandRootElement(IWebElement element)
+        private IWebElement GetLastSelectorShadowroot( params string[] selectors)
         {
-            return (IWebElement)((IJavaScriptExecutor)_driver ).ExecuteScript("return arguments[0].shadowRoot", element);
+            var js = (IJavaScriptExecutor)_driver;
+            var root = js.ExecuteScript("return document");
+           
+            foreach ( string selector in selectors)
+            {
+                root = js.ExecuteScript("return arguments[0].querySelector(arguments[1]).shadowRoot", root, selector);
+            };
+
+            return (IWebElement) root;
         }
 
         [TestCleanup]
