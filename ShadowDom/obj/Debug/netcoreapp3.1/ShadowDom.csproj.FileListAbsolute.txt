@@ -92,3 +92,6 @@ D:\Recursos\test-automation-csharp\ShadowDom\obj\Debug\netcoreapp3.1\ShadowDom.c
 D:\Recursos\test-automation-csharp\ShadowDom\obj\Debug\netcoreapp3.1\ShadowDom.dll
 D:\Recursos\test-automation-csharp\ShadowDom\obj\Debug\netcoreapp3.1\ShadowDom.pdb
 D:\Recursos\test-automation-csharp\ShadowDom\obj\Debug\netcoreapp3.1\ShadowDom.genruntimeconfig.cache
+D:\Recursos\test-automation-csharp\ShadowDom\bin\Debug\netcoreapp3.1\testhost.exe
+D:\Recursos\test-automation-csharp\ShadowDom\bin\Debug\netcoreapp3.1\Microsoft.TestPlatform.AdapterUtilities.dll
+D:\Recursos\test-automation-csharp\ShadowDom\bin\Debug\netcoreapp3.1\WebDriver.dll
