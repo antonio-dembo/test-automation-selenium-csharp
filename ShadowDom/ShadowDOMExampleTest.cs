@@ -9,7 +9,7 @@ namespace ShadowDom
     public class ShadowDOMExampleTest
     {
         private IWebDriver _driver;
-        private const string driverPath = @"D:\webdriver\chromedriver_win32";
+        //private const string driverPath = @"D:\webdriver\chromedriver_win32";
 
         [TestInitialize]
         public void Initialization()
@@ -18,7 +18,7 @@ namespace ShadowDom
             ChromeOptions options = new ChromeOptions();
 
             options.AddArgument("start-maximized");
-            _driver = new ChromeDriver(chromeDriverDirectory: driverPath, options);
+            _driver = new ChromeDriver(options);
         }
 
         [TestMethod]
@@ -29,9 +29,10 @@ namespace ShadowDom
 
             Console.WriteLine("Validate downloads page header text");
             IWebElement shadowRoot = GetLastSelectorShadowroot("downloads-manager", "downloads-toolbar", "cr-toolbar");            
-            var actualHeading = shadowRoot.FindElement(By.XPath("//div[@id='leftContent']/div/"));  //this line breaks the test
+            var actualHeading = shadowRoot.FindElement(By.Id("leftSpacer"));
+            
             string actualHeadingText = actualHeading.Text;
-            Assert.Equals("Downloads", actualHeadingText);
+            Assert.AreEqual("Downloads", actualHeadingText);
         }
 
         private IWebElement GetLastSelectorShadowroot( params string[] selectors)
