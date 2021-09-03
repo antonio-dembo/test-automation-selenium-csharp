@@ -28,7 +28,7 @@ namespace ShadowDom
             _driver.Navigate().GoToUrl("chrome://downloads");
 
             Console.WriteLine("Validate downloads page header text");
-            IWebElement shadowRoot = GetLastSelectorShadowroot("downloads-manager", "downloads-toolbar", "cr-toolbar");            
+            IWebElement shadowRoot = GetLastSelectorShadowroot("downloads-manager", "downloads-toolbar", "toolbar");            
             var actualHeading = shadowRoot.FindElement(By.Id("leftSpacer"));
             
             string actualHeadingText = actualHeading.Text;
@@ -39,11 +39,30 @@ namespace ShadowDom
         {
             var js = (IJavaScriptExecutor)_driver;
             var root = js.ExecuteScript("return document");
-           
-            foreach ( string selector in selectors)
+
+            string namedItemObjectJS = "return arguments[0].children.namedItem(arguments[1])";
+            string querySelectorJS = "return arguments[0].querySelector(arguments[1]).shadowRoot";
+            string getElementByIDJS = "return arguments[0].getElementById(arguments[1]).shadowRoot";
+
+            try
             {
-                root = js.ExecuteScript("return arguments[0].querySelector(arguments[1]).shadowRoot", root, selector);
-            };
+                foreach (string selector in selectors)
+                {
+                    var checkElement = js.ExecuteScript(namedItemObjectJS, root, selector);
+
+                    if (checkElement is null)
+                    {
+                        root = js.ExecuteScript(querySelectorJS, root, selector);
+                        continue;
+                    }
+                    root = js.ExecuteScript(getElementByIDJS, root, selector);
+                };
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine(e);
+                throw;
+            }
 
             return (IWebElement) root;
         }
